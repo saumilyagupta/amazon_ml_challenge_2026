@@ -22,6 +22,11 @@ We treat entity resolution as a **many-to-one assignment problem**. A recall-fir
 
 The part we are proudest of is the **continual learning system built on our internal evaluations**. Every idea was scored by internal evals before it reached the leaderboard, and every leaderboard reading was fed back to recalibrate those evals. This took us from 0.960193 to 0.991369 on the public board, and to **0.991411 (rank #8)** on the final leaderboard.
 
+<p align="center">
+<img src="code/business_entity_resolution/docs/figures/fig_overview.png" width="100%" alt="System overview: input data, preprocessing, recall-first blocking, two-stage LightGBM matching, many-to-one decoding, refinement, final output, and the continual learning loop driven by internal evaluations">
+<br><em>System overview. Seven pipeline stages run left to right, from the three input sources to the final one-owner assignment. The continual learning loop underneath (Section 2.4) decided every change to them.</em>
+</p>
+
 ---
 
 ## 2. Methodology
