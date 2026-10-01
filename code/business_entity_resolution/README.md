@@ -113,7 +113,7 @@ code/business_entity_resolution/
 ├── requirements.txt           pinned dependencies
 ├── LICENSE                    MIT (the team's code)
 ├── THIRD_PARTY_LICENSES.md    models and libraries
-├── docs/figures/              figures of Documentation_template.md
+├── docs/figures/              figures of the root README.md
 └── src/                       all source code, trained models and frozen tables
 ```
 
@@ -293,7 +293,7 @@ $PY $S/tools/score.py --pred smoke/work/output/v3/matching_results.tsv --gt smok
 
 ## 6. Method summary
 
-Details are in `Documentation_template.md`.
+Details are in the root `README.md`.
 
 - **Records.** TSVs read with quoting disabled; Indic-script words mapped to Latin through the 1,534-word dictionary (an additional view; the raw text is kept); anyascii folding; house numbers compared as integers (zero padding); legal-form / honorific stripping; phonetic skeleton; per-record frequencies; fake-name flag; IDF vocabularies.
 - **Blocking union v2** (country-scoped, nothing country-specific):
@@ -344,7 +344,7 @@ The later layers of [§10](#10-the-submitted-file-clean13_frlone) add further fi
 
 ### Transductive, label-free uses of the unlabelled test inputs
 
-All of these are declared in `Documentation_template.md`. No test label is used or created.
+All of these are declared in the root `README.md`. No test label is used or created.
 
 - France word lists and statistics: the explainer's France lists (from test anchor pairs), the 6-word France decoy list and the second explainer's France IDF;
 - the post-pass pattern tables (derived at run time from the test records and scored pairs, not shipped) and its France decoy words;
@@ -359,7 +359,7 @@ All of these are declared in `Documentation_template.md`. No test label is used 
 |---|---|---|---|
 | **A.** 15 offset-conditioned decoy features replace v2b's `dec_num_shift` / `dec_flag` | `ber/v3decoy.py`, `features.py` (`features.v3_decoy`) | `resources/decoy_lists.json` | +0.00029 (own competition + one-owner: 0.98962 → 0.98991; +0.00030 with v1 competition) |
 | **B.** exclusivity against the own p2 + strict one-owner | `ber/setdecoder.py` (`own_competition`, `one_owner`), `train.py` / `predict.py` (`decision.competition: own`, `decision.one_owner`) | `resources/models/v3/R10c_m0.0_own.txt` | +0.00017 [+0.00008, +0.00025] on top of A + D |
-| **C.** France-gated France pack (43 features of France pairs from the pack views) | `ber/francepack.py`, `ber/packrecords.py`, `ber/packfeats.py`, `features.py` (pk_* columns), `ber/featsets.pack_gate_expr`, `predict.py` | – (static tables in code) | 0 by construction (France proxies: see `Documentation_template.md`) |
+| **C.** France-gated France pack (43 features of France pairs from the pack views) | `ber/francepack.py`, `ber/packrecords.py`, `ber/packfeats.py`, `features.py` (pk_* columns), `ber/featsets.pack_gate_expr`, `predict.py` | – (static tables in code) | 0 by construction (France proxies: see the root `README.md`) |
 | **D.** 14 France-safe features of the second explainer | `ber/branch/`, `features.py` (`features.branch_q`) | `resources/branch_lists/coverage.json` | +0.00010 (0.98991 → 0.99001; +0.00002 with v1 competition); stage 1 alone A + D +0.00064 |
 | **E.** label-free decoy post-pass (removal only) after the decision | `ber/postpass.py`, `ber/postpass_rules.py`, `predict.py` (config `postpass`, `--no-postpass`, `--pre-postpass-out`) | `resources/postpass_decoy_words.json` | +1.7e-6 (0.9900100 → 0.9900117); test: 5,873 pairs removed |
 

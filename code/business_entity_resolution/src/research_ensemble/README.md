@@ -112,7 +112,7 @@ Models and stored intermediate tables of these steps: `src/resources/ens8_frozen
   `robust_winner`, and `package()` re-hashes ~400 protected research files; it is brittle to re-run outside the frozen research tree.
 * Steps 12 / 13 / 16 depend on label-free, test-derived tables (`internal_eval/data/pc_test_fam.parquet`, `pc_test_pl.parquet` pseudo-label SWAP_GEN
   chain, `pc_test_frstrict.parquet`, `S1_mirror_sweep/out/pairs_test.parquet`); the RESULTS of those rules are shipped as the frozen mask and removal
-  lists, the rules themselves are documented in Documentation_template.md section 4 (ensemble stages) and section 5 (transductive uses).
+  lists, the rules themselves are documented in the root README.md section 4 (ensemble stages) and section 5 (transductive uses).
 * `06_E06_cross_encoder_stage3/cross_encoder_warm_start/common_text.py` is deliberately absent (it imports the GPL library `unidecode`, which the
   package must not ship; the E06 scripts do not import it).
 * Credentials / upload helpers of the research tree are not copied (checked with grep before zipping).
