@@ -1,0 +1,10 @@
+# Matcher v1 (validated: val macro F0.5 0.98391, locked-30k 0.98336).
+# Candidates = zero-shot e5-small dense channel of ALL S1 (forward top-20 + margin-gated reverse 0.02); 89 stage-1 features;
+# 2-fold cross-fit LightGBM stage 1 + stage 2 (13 list / competition features); decision (e) expected-F0.5 prefix on margin-0.2 eligible pairs.
+name: v1
+candidates: {kind: dense, encoder: zs, fwd_k: 20, rev_gate: 0.02}
+features: {dense_table_encoder: zs, channel_feats: false}
+split: {mode: files}
+model:
+  competitors: null          # record-side competition over its own table (= the dense table of all S1)
+decision: {row_model: true, efs: true}

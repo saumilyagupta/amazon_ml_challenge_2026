@@ -1,0 +1,32 @@
+# Matcher v2b = THE SUBMITTED MODEL (val macro F0.5 0.98950, US 0.98907 / India 0.99014, locked-30k 0.98905; +0.00357 vs hybrid H
+# [paired bootstrap CI +0.00336, +0.00379]). Research run: work/matching/prod_v2b (RESULTS.md).
+# Candidates = blocking union v2 (fine-tuned e5-small dense member fwd@20 + reverse gated 0.03, lexical C1/C2/C3 + reverse channels;
+# val 47.8 candidates per S1, pair recall 0.99686, oracle 0.99909). Train S1 whose pairs fine-tuned the train-split encoder are dropped.
+# Stage 1 (267 features) = v1's 89 + 37 channel + 7 fine-tuned channel features + 127 explainer (noise-inversion) features + 14 additions
+# (multi-part house numbers, decoy, France-safe admin conflict, provenance, hub flag) MINUS the 7 density-shifting reverse-membership /
+# count features (density-robust 'abc_rob'). Stage 2 (286) = + 13 list / record-competition features (vs v1's p1 over the dense table of
+# ALL S1) + 6 sibling-corroboration features. LightGBM lr 0.05, <= 1,500 rounds, early stopping 50, 2-fold cross-fit, pooled over dense
+# and lexical-only pairs, lexical-only negatives subsampled to 25% with weight 4.
+# Decision: R10c learned prefix set-decoder (trained on the training sample's out-of-fold p2) with argmax-vs-best-other exclusivity
+# (a pair survives iff p2 >= best OTHER S1's v1 p2 for the record; margin 0). Plain/one-to-one/margin/row-model/(e) are tuned too and
+# the best on validation is kept (all within 0.0002 in the research run).
+# Requires matcher v1 first (competitor table): train.py / predict.py --variant v1. Shipped trained models: resources/models/v2b/.
+name: v2b
+candidates: {kind: union, union: v2, encoder: ft, drop_ft_seen_s1: true}
+features:
+  dense_table_encoder: zs
+  channel_feats: true
+  explainer: true
+  v2b_extra: true
+  sibling: true
+  drop: [u_in_rev, u_in_c1r, u_in_c2r, u_in_c3r, u_n_lexrev_s1, u_n_member_channels, u_in_rev_ft]
+split: {mode: files}
+model:
+  competitors: v1
+  drop_ft_seen_s1: true
+  lgb: {learning_rate: 0.05}
+  rounds: 1500
+  early_stopping: 50
+  folds: 2
+  lexneg: 0.25
+decision: {row_model: true, efs: true, set_decoder: true, set_margins: [0.0, 0.2]}

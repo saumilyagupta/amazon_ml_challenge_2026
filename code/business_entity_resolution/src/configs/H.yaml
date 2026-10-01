@@ -1,0 +1,12 @@
+# Hybrid H = CURRENT BEST VALIDATED SUBMISSION (val 0.98587, locked-30k 0.98540, +0.00195 vs v1 [paired bootstrap CI 0.00181, 0.00211]).
+# Candidates = union v1 (same as v2a). Probabilities: matcher v1's on the pairs of v1's dense table, matcher v2a's on the lexical-only
+# union pairs. Decision: (e) expected-F0.5 prefix choice over all pairs (plain eligibility), lambda / q0 estimated on the training sample.
+# Requires v1 and v2a to be trained / predicted first (train.py --variant v1, v2a; predict.py --variant v1, v2a).
+name: H
+candidates: {kind: union, union: v1, encoder: zs}
+features: {dense_table_encoder: zs, channel_feats: true}
+split: {mode: files}
+hybrid: {dense: v1, lexical_only: v2a}
+model:
+  competitors: v1
+decision: {row_model: true, efs: true}

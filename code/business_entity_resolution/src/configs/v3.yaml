@@ -1,0 +1,46 @@
+# Matcher v3 = THE SUBMITTED MODEL (research variant 'AD', work/matching/prod_v3, RESULTS.md).
+# Validation (220,730 S1 of the train split, full 10.32M-record pool): macro F0.5 0.99001 (US 0.98979 / India 0.99033), locked 30k 0.98954,
+# paired vs v2b's final decision (0.98950): +0.00051 [95% bootstrap CI +0.00037, +0.00065].
+# = v2b's recipe (union v2 candidates, 2-fold 2-stage LightGBM, explainer features, sibling features, R10c set-decoder) + four changes:
+#  A. 15 offset-conditioned decoy features (ber.v3decoy) replacing v2b's dec_num_shift / dec_flag (dec_extra kept)
+#  B. decision: exclusivity against the pipeline's OWN stage-2 probabilities (competition: own) + strict one-owner (every S2/S3 record keeps
+#     only the selecting S1 with the highest p2); R10c set-decoder refit on the training sample's out-of-fold p2 with that competition
+#  C. France-gated France pack (ber.francepack / packfeats / packrecords): for pairs whose S1 country is France the 43 pack-affected v1
+#     features are taken from the pack views (department->region, saint, bis/ter suffixes, French street types, country tags, French legal
+#     forms). Training data has no France, so training is unaffected; validation effect is exactly 0 by construction.
+#  D. 14 France-safe features of the team's reverse-engineering branch (ber.branch.Q14)
+# Stage 1: 294 features (v2b's 267 - 2 + 15 + 14); stage 2: 313 (+ 13 list / record-competition features vs v1's p1 + 6 sibling features).
+# Requires matcher v1 first (stage-2 record-side competitor table): train.py / predict.py --variant v1. Shipped trained models: resources/models/v3/.
+name: v3
+candidates: {kind: union, union: v2, encoder: ft, drop_ft_seen_s1: true}
+features:
+  dense_table_encoder: zs
+  channel_feats: true
+  explainer: true
+  v2b_extra: true
+  sibling: true
+  v3_decoy: true          # A: + ber.v3decoy.DEC_FEATS (15), word lists resources/decoy_lists.json
+  branch_q: true          # D: + ber.branch.Q14 (14), filler lists resources/branch_lists/coverage.json, IDF built from the S1 files
+  pack_gate: [France]     # C: countries whose pairs take the France-pack views of the 43 affected features (pk_ columns) at scoring time
+  drop: [u_in_rev, u_in_c1r, u_in_c2r, u_in_c3r, u_n_lexrev_s1, u_n_member_channels, u_in_rev_ft, dec_num_shift, dec_flag]
+split: {mode: files}
+model:
+  competitors: v1         # stage-2 record-side features use v1's p1 over the dense table of ALL S1 (as v2b)
+  drop_ft_seen_s1: true
+  lgb: {learning_rate: 0.05}
+  rounds: 1500
+  early_stopping: 50
+  folds: 2
+  lexneg: 0.25
+decision:
+  row_model: true
+  efs: true
+  set_decoder: true
+  set_margins: [0.0]
+  competition: own        # B: exclusivity vs the pipeline's own p2 (train: v1's p2 outside the scored S1); 'v1' = v2b's rule
+  one_owner: true         # B: strict one-owner post-pass after the set-decoder
+  final_policy: 'R10c:m0.0'   # research choice (best of all v3 policies on validation); omit to keep the best-on-validation rule
+postpass:                 # E: label-free decoy vetoes after the decision, removal only (ber.postpass, run by predict.py; --no-postpass = raw v3).
+  enabled: true           #    D = {1,2,3,4,5,7,9,11,13,21}; decoy word lists resources/postpass_decoy_words.json; the SUBMITTED file = v3 + post-pass
+  rules: [sixword, FRcountry, FRlegal, USlegal_no12]   # applied in this order (US legal veto at k in D minus {1, 2})
+  one_owner: true         #    then the strict one-owner rule (a no-op after the own-competition decoder)

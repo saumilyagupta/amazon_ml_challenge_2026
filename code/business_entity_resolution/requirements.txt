@@ -1,0 +1,25 @@
+# Pinned to the versions of the environment the results were produced with (Python 3.13.12, /opt/conda/bin/python3, Linux x86_64).
+# Everything is pip-installable; torch was installed with CUDA 12.4 wheels (CPU-only torch works too, only slower for the dense channel).
+# Licences: all MIT / BSD / Apache-2.0 / ISC (anyascii); no GPL package (unidecode is NOT used anywhere).
+# Matcher v3 adds no dependency: the decoy block / France pack use polars, numpy, scipy, rapidfuzz, anyascii; the second explainer
+# (ber/branch) uses rapidfuzz, pandas and the standard library (unicodedata, pickle, multiprocessing).
+numpy==2.4.4
+pandas==2.3.3
+polars==1.44.2
+pyarrow==24.0.0
+scipy==1.17.1
+scikit-learn==1.6.1          # HashingVectorizer / normalize (explainer char-TF-IDF features), metrics
+lightgbm==4.7.0
+rapidfuzz==3.14.6
+anyascii==0.3.3
+sparse-dot-topn==1.2.0
+PyYAML==6.0.3
+torch==2.6.0
+transformers==4.57.3
+sentence-transformers==5.1.2
+tokenizers==0.22.2
+safetensors==0.8.0
+huggingface-hub==0.36.2
+tqdm==4.67.3
+# optional, only for the explainer unit tests (tools/test_explainer_views.py)
+pytest==9.1.1

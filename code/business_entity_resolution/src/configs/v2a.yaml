@@ -1,0 +1,10 @@
+# Matcher v2a (validated: val 0.98503, locked-30k 0.98425): v1 recipe on the REC20 blocking union v1 (zero-shot dense member +
+# lexical channels C1/C2/C3 and their reverse forms; 49.5 candidates per S1; oracle 0.99766) + 37 channel-evidence features.
+# Record-side competition (stage 2 and the decision layer) = matcher v1's probabilities over the dense table of ALL S1 -> train v1 first.
+name: v2a
+candidates: {kind: union, union: v1, encoder: zs}
+features: {dense_table_encoder: zs, channel_feats: true}
+split: {mode: files}
+model:
+  competitors: v1
+decision: {row_model: true, efs: true}

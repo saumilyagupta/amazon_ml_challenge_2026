@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+# Exceeds GitHub 100MB file limit
+output/candidate_pairs.tsv
+output/matching_results.tsv
