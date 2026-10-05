@@ -8,8 +8,8 @@
 
 | member         | GitHub                                           | X                                                    |
 | -------------- | ------------------------------------------------ | ---------------------------------------------------- |
-| Shashvat Singh | [@sh4shv4t](https://github.com/sh4shv4t)         | [@shashvatsingh05](https://x.com/shashvatsingh05)    |
 | Saumilya Gupta | [@saumilyagupta](https://github.com/saumilyagupta) | [@Saumilya_gupta](https://x.com/Saumilya_gupta)    |
+| Shashvat Singh | [@sh4shv4t](https://github.com/sh4shv4t)         | [@shashvatsingh05](https://x.com/shashvatsingh05)    |
 | Aditya Kumar   | [@vasujunior7](https://github.com/vasujunior7)   | [@JuniorVasu](https://x.com/JuniorVasu)              |
 
 <img src="code/business_entity_resolution/docs/figures/fig0_scorecard.png" width="100%" alt="Score card: final leaderboard 0.991411 (rank 8), validation 0.992195, blocking recall 0.99686">
